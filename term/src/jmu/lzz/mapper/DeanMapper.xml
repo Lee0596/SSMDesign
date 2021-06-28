@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jmu.lzz.mapper.DeanMapper">
+
+   <select id="selectCouBypage"  resultType="jmu.lzz.vo.Cou">
+     select * from cou where roomID=#{arg2} limit #{arg0},#{arg1}
+   </select>
+   
+      <select id="selectStudyBypage"  resultType="jmu.lzz.vo.Study">
+     select * from study where couID=#{arg2} limit #{arg0},#{arg1}
+   </select>
+   
+         <select id="selectChoiceBypage"  resultType="jmu.lzz.vo.Choice">
+     select * from choice where studyID=#{arg2} limit #{arg0},#{arg1}
+   </select>
+   
+      <select id="couCount" parameterType="String" resultType="int">
+     select count(*) from cou where roomID=#{arg0}
+   </select>
+   
+         <select id="studyCount" parameterType="String" resultType="int">
+     select count(*) from study where couID=#{arg0}
+   </select>
+   
+            <select id="choiceCount" parameterType="String" resultType="int">
+     select count(*) from choice where studyID=#{arg0}
+   </select>
+   
+    <select id="findCou"  resultType="jmu.lzz.vo.Cou">
+     select * from cou where couID=#{couID}
+   </select>
+   
+       <select id="findStudy"  resultType="jmu.lzz.vo.Study">
+     select * from study where studyID=#{studyID}
+   </select>
+   
+<insert id="addStudent" parameterType="java.util.List">
+    insert into student(stuID,classID,stuName,stuPassword,joinTime)  
+    values
+    <foreach collection="list" item="stu" separator=",">
+        (#{stu.stuID},
+        #{stu.classID},
+        #{stu.stuName},
+        #{stu.stuPassword},
+        #{stu.joinTime})
+    </foreach>
+  </insert>
+  
+  <insert id="addClass" parameterType="java.util.List">
+    insert into class(classID,collegeID,className,classNum)  
+    values
+    <foreach collection="list" item="class" separator=",">
+        (#{class.classID},
+        #{class.collegeID},
+        #{class.className},
+        #{class.classNum})
+    </foreach>
+  </insert>
+  
+    <insert id="addCou" parameterType="java.util.List">
+    insert into cou(couID,roomID,couName,couCredit,couHours,couStyle)  
+    values
+    <foreach collection="list" item="cou" separator=",">
+        (#{cou.couID},
+        #{cou.roomID},
+        #{cou.couName},
+        #{cou.couCredit},
+        #{cou.couHours},
+        #{cou.couStyle})
+    </foreach>
+  </insert>
+  
+     <insert id="addStudy" parameterType="jmu.lzz.vo.Study">
+   insert into study(studyID,teacherID,couID,studyStatus,studyReport,deadLine) values('${studyID}','${teacherID}','${couID}','${studyStatus}',studyReport,'${deadLine}')
+   </insert>
+   
+        <insert id="addChoice" parameterType="jmu.lzz.vo.Choice">
+   insert into choice(studyID,classID,termDate) values('${studyID}','${classID}','${termDate}')
+   </insert>
+</mapper>

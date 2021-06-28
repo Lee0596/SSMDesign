@@ -1,0 +1,218 @@
+/*==============================================================*/
+/* DBMS name:      MySQL 5.0                                    */
+/* Created on:     2020/6/20 21:48:28                           */
+/*==============================================================*/
+
+
+drop table if exists choice;
+
+drop table if exists class;
+
+drop table if exists college;
+
+drop table if exists cou;
+
+drop table if exists dean;
+
+drop table if exists elect;
+
+drop table if exists exam;
+
+drop table if exists room;
+
+drop table if exists student;
+
+drop table if exists study;
+
+drop table if exists teacher;
+
+drop table if exists test;
+
+/*==============================================================*/
+/* Table: choice                                                */
+/*==============================================================*/
+create table choice
+(
+   studyID              varchar(20) not null,
+   classID              varchar(20) not null,
+   termDate             varchar(20),
+   primary key (studyID, classID)
+);
+
+/*==============================================================*/
+/* Table: class                                                 */
+/*==============================================================*/
+create table class
+(
+   classID              varchar(20) not null,
+   collegeID            varchar(20),
+   className            varchar(20),
+   classNum             int,
+   primary key (classID)
+);
+
+/*==============================================================*/
+/* Table: college                                               */
+/*==============================================================*/
+create table college
+(
+   collegeID            varchar(20) not null,
+   collegeName          varchar(20),
+   primary key (collegeID)
+);
+
+/*==============================================================*/
+/* Table: cou                                                   */
+/*==============================================================*/
+create table cou
+(
+   couID                varchar(20) not null,
+   roomID               varchar(20),
+   couName              varchar(20),
+   couCredit            decimal(3,1),
+   couHours             decimal(4,1),
+   couStyle             varchar(20),
+   primary key (couID)
+);
+
+/*==============================================================*/
+/* Table: dean                                                  */
+/*==============================================================*/
+create table dean
+(
+   deanID               varchar(20) not null,
+   roomID               varchar(20),
+   deanName             varchar(20),
+   deanPassword         varchar(20),
+   primary key (deanID)
+);
+
+/*==============================================================*/
+/* Table: elect                                                 */
+/*==============================================================*/
+create table elect
+(
+   studyID              varchar(20) not null,
+   stuID                varchar(20) not null,
+   electStasus          varchar(20),
+   finalGrade           varchar(20),
+   primary key (studyID, stuID)
+);
+
+/*==============================================================*/
+/* Table: exam                                                  */
+/*==============================================================*/
+create table exam
+(
+   studyID              varchar(20) not null,
+   examName             varchar(20) not null,
+   examRadio            decimal(3,2),
+   primary key (studyID, examName)
+);
+
+/*==============================================================*/
+/* Table: room                                                  */
+/*==============================================================*/
+create table room
+(
+   roomID               varchar(20) not null,
+   collegeID            varchar(20),
+   roomName             varchar(20),
+   primary key (roomID)
+);
+
+/*==============================================================*/
+/* Table: student                                               */
+/*==============================================================*/
+create table student
+(
+   stuID                varchar(20) not null,
+   classID              varchar(20),
+   stuName              varchar(20),
+   stuPassword          varchar(20) default '123456',
+   joinTime             date,
+   primary key (stuID)
+);
+
+/*==============================================================*/
+/* Table: study                                                 */
+/*==============================================================*/
+create table study
+(
+   studyID              varchar(20) not null,
+   teacherID            varchar(20),
+   couID                varchar(20),
+   studyStatus          varchar(20),
+   studyWay             varchar(20),
+   studyStyle           varchar(20),
+   studyEntry           bool default false,
+   studyReport          bool default false,
+   deadLine             timestamp,
+   primary key (studyID)
+);
+
+/*==============================================================*/
+/* Table: teacher                                               */
+/*==============================================================*/
+create table teacher
+(
+   teacherID            varchar(20) not null,
+   teacherName          varchar(20),
+   teacherPassword      varchar(20),
+   primary key (teacherID)
+);
+
+/*==============================================================*/
+/* Table: test                                                  */
+/*==============================================================*/
+create table test
+(
+   stuID                varchar(20) not null,
+   studyID              varchar(20) not null,
+   examName             varchar(20) not null,
+   testGrade            decimal(5,2),
+   primary key (studyID, stuID, examName)
+);
+
+alter table choice add constraint FK_choice foreign key (studyID)
+      references study (studyID) on delete restrict on update restrict;
+
+alter table choice add constraint FK_choice2 foreign key (classID)
+      references class (classID) on delete restrict on update restrict;
+
+alter table class add constraint FK_Relationship_7 foreign key (collegeID)
+      references college (collegeID) on delete restrict on update restrict;
+
+alter table cou add constraint FK_Relationship_2 foreign key (roomID)
+      references room (roomID) on delete restrict on update restrict;
+
+alter table dean add constraint FK_Relationship_1 foreign key (roomID)
+      references room (roomID) on delete restrict on update restrict;
+
+alter table elect add constraint FK_elect foreign key (studyID)
+      references study (studyID) on delete restrict on update restrict;
+
+alter table elect add constraint FK_elect2 foreign key (stuID)
+      references student (stuID) on delete restrict on update restrict;
+
+alter table exam add constraint FK_Relationship_5 foreign key (studyID)
+      references study (studyID) on delete restrict on update restrict;
+
+alter table room add constraint FK_Relationship_8 foreign key (collegeID)
+      references college (collegeID) on delete restrict on update restrict;
+
+alter table student add constraint FK_Relationship_6 foreign key (classID)
+      references class (classID) on delete restrict on update restrict;
+
+alter table study add constraint FK_Relationship_3 foreign key (couID)
+      references cou (couID) on delete restrict on update restrict;
+
+alter table study add constraint FK_Relationship_4 foreign key (teacherID)
+      references teacher (teacherID) on delete restrict on update restrict;
+
+alter table test add constraint FK_test foreign key (stuID)
+      references student (stuID) on delete restrict on update restrict;
+
+alter table test add constraint FK_test2 foreign key (studyID, examName)
+      references exam (studyID, examName) on delete restrict on update restrict;
+

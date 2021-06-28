@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jmu.lzz.mapper.LoginMapper">
+   <select id="findStudent" parameterType="jmu.lzz.vo.Student" resultType="jmu.lzz.vo.Student">
+     select * from student where stuID=#{stuID} and stuPassword=#{stuPassword}
+   </select>
+      <select id="findTeacher" parameterType="jmu.lzz.vo.Teacher" resultType="jmu.lzz.vo.Teacher">
+     select * from teacher where teacherID=#{teacherID} and teacherPassword=#{teacherPassword}
+   </select>
+      <select id="findDean" parameterType="jmu.lzz.vo.Dean" resultType="jmu.lzz.vo.Dean">
+     select * from dean where deanID=#{deanID} and deanPassword=#{deanPassword}
+   </select>
+       <select id="findClass" parameterType="String" resultType="jmu.lzz.vo.Class">
+     select * from class where classID=#{collegeID}
+   </select>
+        <select id="findRoom" parameterType="String" resultType="jmu.lzz.vo.Room">
+     select * from room where roomID=#{roomID}
+   </select>
+        <select id="findCollege" parameterType="String" resultType="jmu.lzz.vo.College">
+     select * from college where collegeID=#{collegeID}
+   </select>
+</mapper>

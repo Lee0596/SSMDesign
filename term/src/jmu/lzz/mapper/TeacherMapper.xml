@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jmu.lzz.mapper.TeacherMapper">
+
+    <select id="selectAllStudyBypage"  resultType="jmu.lzz.vo.Study">
+    select  * from study
+	JOIN choice
+	on choice.studyID=study.studyID
+	where choice.termDate= #{arg2}
+	and study.teacherID=#{arg3}
+	group by study.studyID
+	limit #{arg0},#{arg1}
+   </select>
+   
+       <select id="selectAllTermDateBypage"  resultType="jmu.lzz.vo.Choice">
+      select DISTINCT choice.termDate from choice 
+      INNER JOIN study
+      on choice.studyID=study.studyID
+ 	  where study.teacherID=#{arg2}
+ 	  order by choice.termDate desc
+ 	  limit #{arg0},#{arg1}
+   </select>
+   
+   <select id="selectAllClassBypage"  resultType="jmu.lzz.vo.Choice">
+      select * from choice 
+ 	  where studyID=#{arg3} and termDate=#{arg2}
+ 	  limit #{arg0},#{arg1}
+   </select>
+
+     <select id="studyCount" parameterType="String" resultType="int">
+     select count(*) from study
+	LEFT JOIN choice
+	on choice.studyID=study.studyID
+	where choice.termDate= #{arg0}
+	and study.teacherID=#{arg1}
+   </select>
+   
+     <select id="termDateCount" parameterType="String" resultType="integer">
+	 select  count(*)  from choice 
+	 INNER JOIN study
+	 on choice.studyID=study.studyID
+	 where study.teacherID=#{arg0}
+	 group by choice.termDate
+   </select>
+   
+     <insert id="addExam" parameterType="java.util.List">
+    insert into exam(studyID,examName,examRadio)  
+    values
+    <foreach collection="list" item="exam" separator=",">
+        (#{exam.studyID},
+        #{exam.examName},
+        #{exam.examRadio})
+    </foreach>
+  </insert>
+  
+       <insert id="addElect" parameterType="java.util.List">
+    insert into elect(studyID,stuID,electStasus,finalGrade)  
+    values
+    <foreach collection="list" item="elect" separator=",">
+        (#{elect.studyID},
+        #{elect.stuID},
+        #{elect.electStasus},
+        #{elect.finalGrade})
+    </foreach>
+  </insert>
+  
+         <insert id="addTest" parameterType="jmu.lzz.vo.Test">
+    insert into test(stuID,studyID,examName,testGrade)  
+    values(#{stuID},#{studyID},#{examName}, #{testGrade})
+  </insert>
+  
+  <update id="updateStudy" parameterType="jmu.lzz.vo.Study">
+  update study set studyWay=#{studyWay},studyStyle=#{studyStyle},studyEntry=#{studyEntry}
+  where studyID=#{studyID}
+  </update>
+  
+    <update id="updateStudyEntry" parameterType="jmu.lzz.vo.Study">
+  update study set studyEntry=#{studyEntry}
+  where studyID=#{studyID}
+  </update>
+  
+      <update id="updateStudyReport" parameterType="jmu.lzz.vo.Study">
+  update study set studyReport=#{studyReport}
+  where studyID=#{studyID}
+  </update>
+   
+   <delete id="examDelete" parameterType="String">
+   delete from exam where studyID=#{arg0}
+   </delete>
+   
+      <delete id="electDelete" parameterType="String">
+   delete from elect where studyID=#{arg0} and stuID=#{arg1}
+   </delete>
+   
+         <delete id="testDelete" parameterType="String">
+   delete from test where studyID=#{arg0} and stuID=#{arg1}
+   </delete>
+   
+         <delete id="electDeleteAll" parameterType="String">
+   delete from elect where studyID=#{arg0}
+   </delete>
+   
+            <delete id="testDeleteAll" parameterType="String">
+   delete from test where studyID=#{arg0} 
+   </delete>
+   
+   <select id="findCou" parameterType="String" resultType="jmu.lzz.vo.Cou">
+      select * from cou where couID=#{arg0}
+  </select>
+  
+     <select id="findStudy" parameterType="String" resultType="jmu.lzz.vo.Study">
+      select * from study where studyID=#{arg0}
+  </select>
+  
+       <select id="findChoice" parameterType="String" resultType="jmu.lzz.vo.Choice">
+      select * from choice where studyID=#{arg0} and termDate=#{arg1}
+  </select>
+  
+  <select id="findStudent" resultType="jmu.lzz.vo.Student">
+      select * from student where classID in
+      <foreach collection="list" separator="," item="choice" open="(" close=")">
+          #{choice.classID}
+        </foreach>
+  </select>
+  
+         <select id="findExam" parameterType="String" resultType="jmu.lzz.vo.Exam">
+      select * from exam where studyID=#{arg0}
+  </select>
+  
+           <select id="findElect" parameterType="String" resultType="jmu.lzz.vo.Elect">
+      select * from elect where studyID=#{arg0} and stuID=#{arg1}
+  </select>
+  
+             <select id="findTest" parameterType="String" resultType="jmu.lzz.vo.Test">
+      select * from test where studyID=#{arg0} and stuID=#{arg1} and examName=#{arg2}
+  </select>
+  
+</mapper>
